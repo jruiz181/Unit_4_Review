@@ -11,6 +11,7 @@
    Global Variables
    ================
    
+   
    allCells
       References the TD cells within the Hitori table grid.   
       
@@ -46,7 +47,27 @@
       the numbers, blocks, and rating parameters.
 	
 */
+var allCells
 
+
+
+window.onload = function startUp(){
+   document.getElementById("puzzleTitle").innerHTML = "Puzzle 1"
+   document.getElementById("puzzle").innerHTML = drawHitori(hitori1Numbers, hitori1Blocks, hitori1Rating);
+   var puzzleButtons = document.getElementsByClassName("puzzles");
+   for(var i = 0; i < puzzleButtons.length; i++){
+      puzzleButtons[i].addEventListener("click", switchPuzzle);
+   }
+   setupPuzzle();
+}
+switchPuzzle(e){
+   var puzzleID = e.target.id;
+   document.getElementById("puzzleTitle").innerHTML = e.target.value;
+   switch(puzzleID){
+      case "puzzle1":
+         document
+   }
+}
 
 
 
