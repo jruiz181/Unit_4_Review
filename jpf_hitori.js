@@ -4,20 +4,16 @@
    New Perspectives on HTML5, CSS3, and JavaScript 6th Edition
    Tutorial 11
    Review Assignment
-
-   Author: 
-   Date:   
-
+   Author: jeremiah ruiz   
+   Date:   3-11-20
    Global Variables
    ================
-   
    
    allCells
       References the TD cells within the Hitori table grid.   
       
    Function List
    =============
-
    startUp()
       Run when the web page is loaded; displays puzzle 1
       and loads the event handlers for the web page buttons.
@@ -25,12 +21,10 @@
    setupPuzzle()
       Sets up a new puzzle, adding the event handlers for
       every puzzle cell.      
-
    switchPuzzle(e)
       Swaps one puzzle for another based on the button being clicked
       by the user. Confirms the change before swapping in the
       new puzzle.
-
    findErrors()
       Highlights the errors in the Hitori puzzle in a red font.
       
@@ -40,78 +34,104 @@
    checkSolution()
       Checks the current user's puzzle to verify whether it contains
       the complete and correct solution.
-
    drawHitori(numbers, blocks, rating)
       Returns a text string of the HTML code to
       display a Hitori puzzle table based on the contents of
       the numbers, blocks, and rating parameters.
 	
 */
+
+
 var allCells;
 
+//makes the funciton startup run as soon as page is loaded
+window.onload = startUp();
 
-
-window.onload = function startUp(){
-   document.getElementById("puzzleTitle").innerHTML = "Puzzle 1"
+function startUp(){
+   var puzzleButtons = document.getElementsByClassName("puzzles")
+   document.getElementById("puzzleTitle").innerHTML = "Puzzle 1";
    document.getElementById("puzzle").innerHTML = drawHitori(hitori1Numbers, hitori1Blocks, hitori1Rating);
-   var puzzleButtons = document.getElementsByClassName("puzzles");
    for(var i = 0; i < puzzleButtons.length; i++){
-      puzzleButtons[i].addEventListener("click", switchPuzzle);
+      puzzleButtons[i].onclick = switchPuzzle;
    }
    setupPuzzle();
-
+   document.getElementById("check").addEventListener("click", findErrors);
+   document.getElementById("solve").addEventListener("click", showSolution);
 }
-
-
-
 function switchPuzzle(e){
-   if(confirm("You will lose all of your work on the puzzle: continue?")){
-   var puzzleID = e.target.id;
-   document.getElementById("puzzleTitle").innerHTML = e.target.value
-   switch(puzzleID){
-      case "puzzle1":
-         document.getElementById("puzzle").innerHTML = drawHitori(hitori1Numbers, hitori1Blocks, hitori1Rating)
-         break;
-      case "puzzle2":
-         document.getElementById("puzzle").innerHTML = drawHitori(hitori2Numbers, hitori2Blocks, hitori2Rating)
-         break;
-      case "puzzle3":
-         document.getElementById("puzzle").innerHTML = drawHitori(hitori3Numbers, hitori3Blocks, hitori3Rating)
-         break;
+   if(confirm("You will loose all your progress! Are you sure?")){
+      var puzzleID = e.target.id;
+      document.getElementById("puzzleTitle").innerHTML = e.target.value;
+      switch(puzzleID){
+         case "puzzle1":
+            document.getElementById("puzzle").innerHTML = drawHitori(hitori1Numbers, hitori1Blocks, hitori1Rating);
+            break;
+         case "puzzle2":
+            document.getElementById("puzzle").innerHTML = drawHitori(hitori2Numbers, hitori2Blocks, hitori2Rating);
+            break;
+         case "puzzle3":
+            document.getElementById("puzzle").innerHTML = drawHitori(hitori3Numbers, hitori3Blocks, hitori3Rating);
+            break;
+      }
+      setupPuzzle();
    }
-   setupPuzzle();
-   }
+
 }
 
 function setupPuzzle(){
-   allCells = document.querySelectorAll("table#hitoriGrid td");
-
-   for(var i = 0; i < allCells.length; i++){
+   allCells = document.querySelectorAll("table td")
+   for(var i = 0; i<allCells.length; i++){
       allCells[i].style.backgroundColor = "white";
       allCells[i].style.color = "black";
-      allCells[i].style.borderRadius = "0";
+      allCells[i].style.borderRadius = 0;
+
       allCells[i].addEventListener("mousedown", function(e){
          if(e.shiftKey){
             e.target.style.backgroundColor = "white";
             e.target.style.color = "black";
-            e.target.style.borderRadius = "0";
+            e.target.style.borderRadius = 0;
          }else if(e.altKey){
             e.target.style.backgroundColor = "black";
             e.target.style.color = "white";
-            e.target.style.borderRadius = "0";
+            e.target.style.borderRadius = 0;
+
          }else{
-            e.target.style.backgroundColor= "rgb(101,101,101)";
+            e.target.style.backgroundColor = "rgb(101, 101, 101)";
             e.target.style.color = "white";
             e.target.style.borderRadius = "50%";
          }
          e.preventDefault();
-      })
-
+      }
+      )
+         allCells[i].addEventListener("mouseover", function(e){
+            if(e.shiftKey){
+               e.target.style.cursor = "url(jpf_eraser.png), alias";
+            }
+            else if(e.altKey){
+               e.target.style.cursor = "url(jpf_block.png), cell";
+            }
+            else{
+               e.target.style.cursor = "url(jpf_circle.png), pointer";
+            }
+         }
+      );
+      allCells[i].addEventListener("mouseup", checkSolution);
    }
 }
-
-
-
+function findErrors(){
+for(var e = 0; e<allCells.length;e++){
+if(allCells[e].className === "blocks" && allCells[e].style.backgroundColor === "rgb(101, 101, 101)" || allCells[e].className === "circles" && allCells[e].style.backgroundColor === "black"){
+         allCells[e].style.color = "red";
+      }
+setTimeout(function() {
+       for(var i = 0; i<allCells.length;i++){
+       if(allCells[i].style.color === "red"){
+          allCells[i].style.color = "white";
+       } 
+    }
+    } ,1000);
+   }
+}
 
 
 
